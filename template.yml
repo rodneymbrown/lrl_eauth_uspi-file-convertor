@@ -1,0 +1,112 @@
+# This AWS SAM template has been generated from your function's configuration. If
+# your function has one or more triggers, note that the AWS resources associated
+# with these triggers aren't fully specified in this template and include
+# placeholder values. Open this template in AWS Infrastructure Composer or your
+# favorite IDE and modify it to specify a serverless application with other AWS
+# resources.
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: An AWS Serverless Application Model template describing your function.
+Resources:
+  lrleauthuspiformatterfileconvertors:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: .
+      Description: >-
+        This lambda contains code for converting from pdf to docx, docx to xml,
+        and xml back to docx.
+      MemorySize: 520
+      Timeout: 15
+      Handler: lambda_function.lambda_handler
+      Runtime: python3.12
+      Architectures:
+        - x86_64
+      EphemeralStorage:
+        Size: 512
+      Environment:
+        Variables:
+          BUCKET_NAME: lly-eauthoring-components-dev
+          EXTRACTED_FOLDER: lambda-formatter/storage/generated/extracted
+          GENERATED_FOLDER: lambda-formatter/storage/generated
+          UPLOAD_DOCX_PATH: lambda-formatter/storage/uploads
+          UPLOAD_FOLDER: lambda-formatter/storage/uploads
+          UPLOAD_PLAINTEXT_PATH: lambda-formatter/storage/plaintext
+      EventInvokeConfig:
+        MaximumEventAgeInSeconds: 21600
+        MaximumRetryAttempts: 2
+      Layers:
+        - !Ref Layer1
+      PackageType: Zip
+      Policies:
+        - Statement:
+            - Sid: VisualEditor0
+              Effect: Allow
+              Action:
+                - lambda:*
+              Resource: '*'
+            - Sid: AllowFullS3Access
+              Effect: Allow
+              Action:
+                - s3:GetObject
+                - s3:PutObject
+                - s3:DeleteObject
+              Resource:
+                - arn:aws:s3:::lly-eauthoring-components-dev/*
+            - Sid: AllowBucketAccess
+              Effect: Allow
+              Action:
+                - s3:ListBucket
+                - s3:GetBucketLocation
+              Resource: arn:aws:s3:::lly-eauthoring-components-dev
+      RecursiveLoop: Terminate
+      SnapStart:
+        ApplyOn: None
+      Events:
+        Api1:
+          Type: Api
+          Properties:
+            Path: /MyResource
+            Method: ANY
+        Api2:
+          Type: Api
+          Properties:
+            Path: /MyResource
+            Method: ANY
+        Api3:
+          Type: Api
+          Properties:
+            Path: /MyResource
+            Method: ANY
+        Api4:
+          Type: Api
+          Properties:
+            Path: /MyResource
+            Method: ANY
+        Api5:
+          Type: Api
+          Properties:
+            Path: /MyResource
+            Method: ANY
+        Api6:
+          Type: Api
+          Properties:
+            Path: /docx_to_xml
+            Method: POST
+        Api7:
+          Type: Api
+          Properties:
+            Path: /xml_to_docx
+            Method: POST
+      RuntimeManagementConfig:
+        UpdateRuntimeOn: Auto
+  # This resource represents your Layer with name pdf2docx. To download the
+# content of your Layer, go to
+# 
+# aws.amazon.com/go/view?arn=arn%3Aaws%3Alambda%3Aus-east-2%3A730335504421%3Alayer%3Apdf2docx%3A1&source=lambda
+  Layer1:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      ContentUri: ./pdf2docx
+      LayerName: pdf2docx
+      CompatibleRuntimes:
+        - python3.12
